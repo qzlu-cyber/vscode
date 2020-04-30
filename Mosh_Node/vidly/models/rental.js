@@ -1,8 +1,8 @@
-const Joi = require("joi");
-const mongoose = require("mongoose");
+const Joi = require('joi');
+const mongoose = require('mongoose');
 
 const Rental = mongoose.model(
-  "Rental",
+  'Rental',
   new mongoose.Schema({
     customer: {
       type: new mongoose.Schema({
