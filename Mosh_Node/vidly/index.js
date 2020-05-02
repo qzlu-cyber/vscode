@@ -34,5 +34,5 @@ app.use('/api/rentals', rentals);
 app.use('/api/users', users);
 app.use('/api/auth', auth);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3773;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
