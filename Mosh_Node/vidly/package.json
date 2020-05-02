@@ -11,18 +11,12 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^4.0.1",
-<<<<<<< HEAD
     "config": "^3.3.1",
-=======
->>>>>>> ecc579d739f64b6dbf03506057e0c766947940d0
     "express": "^4.16.2",
     "fawn": "^2.1.5",
     "joi": "^13.1.0",
     "joi-objectid": "^2.0.0",
-<<<<<<< HEAD
     "jsonwebtoken": "^8.5.1",
-=======
->>>>>>> ecc579d739f64b6dbf03506057e0c766947940d0
     "lodash": "^4.17.15",
     "mongoose": "^5.9.10",
     "nodemon": "^2.0.3"
