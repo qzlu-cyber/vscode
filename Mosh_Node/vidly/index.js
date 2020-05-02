@@ -17,6 +17,16 @@ const rentals = require('./routes/rentals');
 const users = require('./routes/users');
 const auth = require('./routes/auth');
 
+<<<<<<< HEAD
+=======
+const genres = require('./routes/genres');
+const customers = require('./routes/customers');
+const movies = require('./routes/movies');
+const rentals = require('./routes/rentals');
+const users = require('./routes/users');
+const auth = require('./routes/auth');
+
+>>>>>>> ecc579d739f64b6dbf03506057e0c766947940d0
 mongoose.set('useCreateIndex', true);
 mongoose
   .connect('mongodb://localhost/vidly', {
