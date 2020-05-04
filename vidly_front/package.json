@@ -11,6 +11,7 @@
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.1",
     "react-dom": "^16.13.1",
+    "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1"
   },
   "scripts": {
@@ -20,7 +21,10 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "rules": {
+      "jsx-a11y/anchor-is-valid": "off"
+    }
   },
   "browserslist": {
     "production": [
