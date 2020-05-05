@@ -5,7 +5,7 @@ import Form from '../common/form';
 import { getGenres } from '../../services/fakeGenreService';
 import { getMovie, saveMovie } from '../../services/fakeMovieService';
 
-class MovieForm extends Form {
+class NewMovie extends Form {
   state = {
     data: {
       title: '',
@@ -20,7 +20,7 @@ class MovieForm extends Form {
   schema = {
     _id: Joi.string(),
     title: Joi.string().max(30).required().label('Title'),
-    genreId: Joi.string().required().label('Genre'),
+    genreId: Joi.string().max(20).required().label('Genre'),
     numberInStock: Joi.number().min(0).required().label('Number in stock'),
     dailyRentalRate: Joi.number().min(0).max(10).required().label('Rate'),
   };
@@ -35,7 +35,7 @@ class MovieForm extends Form {
     if (movieId === 'new') return;
 
     const movie = getMovie(movieId);
-    if (!movie) return this.props.history.replace('/not-found');
+    if (!movie) return this.props.history.replace('/movies');
 
     this.setState({
       data: this.mapToViewModel(movie),
@@ -46,7 +46,7 @@ class MovieForm extends Form {
     return {
       _id: movie._id,
       title: movie.title,
-      genreId: movie.genre._id,
+      genre: movie.genre._id,
       numberInStock: movie.numberInStock,
       dailyRentalRate: movie.dailyRentalRate,
     };
@@ -54,8 +54,8 @@ class MovieForm extends Form {
 
   doSubmit = () => {
     saveMovie(this.state.data);
-
-    this.props.history.push('/movies');
+    //this.props.history.push('/movies');
+    console.log('Added');
   };
 
   render() {
@@ -63,13 +63,13 @@ class MovieForm extends Form {
       <form onSubmit={this.handleSubmit}>
         <h1>New Movie</h1>
         {this.renderInput('title', 'Title')}
-        {this.renderSelect('genreId', 'Genre', this.state.genres)}
+        {this.renderInput('genreId', 'Genre')}
         {this.renderInput('numberInStock', 'Number in stock')}
         {this.renderInput('dailyRentalRate', 'Rate')}
-        {this.renderButton('Add')}
+        {this.renderAddButton('Add')}
       </form>
     );
   }
 }
 
-export default MovieForm;
+export default NewMovie;

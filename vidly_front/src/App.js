@@ -6,6 +6,8 @@ import NarBar from './components/navbar';
 import Customers from './components/routes/customers';
 import MovieForm from './components/routes/movieForm';
 import Rentals from './components/routes/rentals';
+import LoginForm from './components/routes/loginForm';
+import RegisterForm from './components/routes/registerForm';
 import NotFound from './components/routes/not-found';
 
 import './App.css';
@@ -21,6 +23,8 @@ class App extends Component {
             <Route path="/movies" component={Movies}></Route>
             <Route path="/customers" component={Customers}></Route>
             <Route path="/rentals" component={Rentals}></Route>
+            <Route path="/login" component={LoginForm}></Route>
+            <Route path="/register" component={RegisterForm}></Route>
             <Route path="/not-found" component={NotFound}></Route>
             <Redirect from="/" exact to="/movies"></Redirect>
             <Redirect to="/not-found"></Redirect>

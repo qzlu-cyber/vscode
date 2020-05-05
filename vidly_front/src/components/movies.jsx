@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import _ from 'lodash';
 
 import MoviesTable from './moviesTable';
@@ -7,6 +8,7 @@ import { getGenres } from '../services/fakeGenreService';
 import Pagination from './common/pagination';
 import paginate from '../utils/paginate';
 import List from './common/list';
+import SearchBar from './searchBar';
 
 class Movies extends Component {
   state = {
@@ -15,6 +17,8 @@ class Movies extends Component {
     currentPage: 1,
     genres: [],
     sortColumn: { path: 'title', order: 'asc' },
+    searchQurry: '',
+    currentGenre: '',
   };
 
   componentDidMount() {
@@ -61,14 +65,22 @@ class Movies extends Component {
   handleSelectGenre = (genre) => {
     this.setState({
       currentGenre: genre,
+      searchQurry: '',
       currentPage: 1,
     });
   };
 
   handleSort = (sortColumn) => {
-    
     this.setState({
       sortColumn,
+    });
+  };
+
+  handleSearch = (qurry) => {
+    this.setState({
+      searchQurry: qurry,
+      currentGenre: '',
+      currentPage: 1,
     });
   };
 
@@ -79,16 +91,22 @@ class Movies extends Component {
       currentPage,
       movies: allMovies,
       genres,
+      value,
       currentGenre,
       sortColumn,
+      searchQurry,
     } = this.state;
 
-    const filtered =
-      currentGenre && currentGenre._id
-        ? allMovies.filter((m) => {
-            return m.genre._id === currentGenre._id;
-          })
-        : allMovies;
+    let filtered = allMovies;
+    if (searchQurry) {
+      filtered = allMovies.filter((m) => {
+        return m.title.toLowerCase().startsWith(searchQurry.toLowerCase());
+      });
+    } else if (currentGenre && currentGenre._id) {
+      filtered = allMovies.filter((m) => {
+        return m.genre._id === currentGenre._id;
+      });
+    }
 
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
 
@@ -106,13 +124,24 @@ class Movies extends Component {
           />
         </div>
         <div className="col">
+          <button className="btn btn-primary mb-2">
+            <Link
+              to="/movies/new"
+              style={{ textDecoration: 'none', color: 'white' }}
+            >
+              New Movie
+            </Link>
+          </button>
+          <SearchBar value={searchQurry} onChange={this.handleSearch} />
           <MoviesTable
             movies={movies}
             filtered={filtered}
             sortColumn={sortColumn}
+            value={value}
             onLike={this.handleLike}
             onDelete={this.handleDelete}
             onSort={this.handleSort}
+            onValueChange={this.handleValueChange}
           />
           <Pagination
             count={filtered.length}
