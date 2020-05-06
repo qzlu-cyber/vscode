@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
+import { toast } from 'react-toastify';
 
+import { getMovies, deleteMovie } from '../services/movieService';
+import { getGenres } from '../services/genreService';
+import auth from '../services/authService';
 import MoviesTable from './moviesTable';
-import { getMovies } from '../services/fakeMovieService';
-import { getGenres } from '../services/fakeGenreService';
 import Pagination from './common/pagination';
 import paginate from '../utils/paginate';
 import List from './common/list';
@@ -21,17 +23,31 @@ class Movies extends Component {
     currentGenre: '',
   };
 
-  componentDidMount() {
-    const genres = [{ _id: '', name: 'All Genres' }, ...getGenres()];
+  async componentDidMount() {
+    const { data: genresData } = await getGenres();
+    const { data: moviesData } = await getMovies();
+    const genres = [{ _id: '', name: 'All Genres' }, ...genresData];
     this.setState({
-      movies: getMovies(),
+      movies: moviesData,
       genres,
     });
   }
 
-  handleDelete = (movie) => {
-    const movies = this.state.movies.filter((m) => m._id !== movie._id);
+  handleDelete = async (movie) => {
+    const originalMovies = this.state.movies;
+    const movies = originalMovies.filter((m) => m._id !== movie._id);
     this.setState({ movies });
+
+    try {
+      await deleteMovie(movie._id);
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404) {
+        toast.error('This movie has already been deleted!');
+        this.setState({
+          movies: originalMovies,
+        });
+      }
+    }
   };
 
   handleLike = (movie) => {
@@ -112,6 +128,8 @@ class Movies extends Component {
 
     const movies = paginate(sorted, currentPage, pageSize);
 
+    const user = auth.getCurrentUser();
+
     if (count === 0) return <p>There are no movies in the database.</p>;
 
     return (
@@ -124,14 +142,16 @@ class Movies extends Component {
           />
         </div>
         <div className="col">
-          <button className="btn btn-primary mb-2">
-            <Link
-              to="/movies/new"
-              style={{ textDecoration: 'none', color: 'white' }}
-            >
-              New Movie
-            </Link>
-          </button>
+          {user && user.isAdmin && (
+            <button className="btn btn-primary mb-2">
+              <Link
+                to="/movies/new"
+                style={{ textDecoration: 'none', color: 'white' }}
+              >
+                New Movie
+              </Link>
+            </button>
+          )}
           <SearchBar value={searchQurry} onChange={this.handleSearch} />
           <MoviesTable
             movies={movies}
